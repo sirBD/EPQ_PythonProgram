@@ -9,7 +9,7 @@ will be revealed. If the player chooses the same square as the game, they get th
 import random
 import collections
 import time
-
+global user_options
 start_balance = (100.00)
 user_options = (1,2,3)
 gridoptions = ['x1','x2','x3','x4','x5','x6','x7','x8','x9','x10','x11','x12','x13','x14','x15','x16','x17','x18','x19','x20','x21','x22','x23','x24','x25','x26']
@@ -23,6 +23,7 @@ time.sleep(3)
 print('Your starting credit balance is: ',start_balance)
 
 def gridgenerate():
+    global cellselect
     grid1position = []
     grid2position = []
     grid3position = []
@@ -45,7 +46,6 @@ def gridgenerate():
 
     if usrinput == 1:
         print("Selected difficulty level 1.")
-        global cellselect
         cellselect = 1
         grid1(grid1position)
 
@@ -58,7 +58,6 @@ def gridgenerate():
 
     if usrinput == 2:
         print("Selected difficulty level 2.")
-        global cellselect
         cellselect = 2
         grid2(grid2position)
 
@@ -71,9 +70,9 @@ def gridgenerate():
 
     if usrinput == 3:
         print("Selected difficulty level 3.")
-        global cellselect
         cellselect = 3
         grid3(grid3position)
+
 
 gridgenerate()
 
