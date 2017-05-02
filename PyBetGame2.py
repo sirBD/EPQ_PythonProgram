@@ -9,6 +9,8 @@ will be revealed. If the player chooses the same square as the game, they get th
 import random
 import collections
 import time
+import sys
+from random import randint
 
 start_balance = (100.00)
 user_options = (1,2,3)
@@ -23,6 +25,7 @@ time.sleep(3)
 print('Your starting credit balance is: ',start_balance)
 
 def gridgenerate():
+    global cellselect
     grid1position = []
     grid2position = []
     grid3position = []
@@ -45,7 +48,6 @@ def gridgenerate():
 
     if usrinput == 1:
         print("Selected difficulty level 1.")
-        global cellselect
         cellselect = 1
         grid1(grid1position)
 
@@ -58,7 +60,6 @@ def gridgenerate():
 
     if usrinput == 2:
         print("Selected difficulty level 2.")
-        global cellselect
         cellselect = 2
         grid2(grid2position)
 
@@ -71,7 +72,6 @@ def gridgenerate():
 
     if usrinput == 3:
         print("Selected difficulty level 3.")
-        global cellselect
         cellselect = 3
         grid3(grid3position)
 
@@ -91,11 +91,14 @@ while not i in ('yes','no'):
 
 time.sleep(2)
 #Rule - User selects square on grid.
-def UserSelect():
+def BetGame():
+    global multiplier
+    global currentbalance
     cellselect1 = 0
     cellselect2 = 0
     cellselect3 = 0
     if cellselect == 1:
+        multiplier = 2
         while not cellselect1 in (cells):
             print("Select the cell you want to bet on.")
             try:
@@ -104,13 +107,61 @@ def UserSelect():
                 cellselect1 not in (cells)
             print("You selected cell:", cellselect1)
             time.sleep(1)
-            print("Updated grid:")
-            # FIX HERE for n, i in enumerate(cells):
+        print("Updated grid:")
+        for n, i in enumerate(cells):
             if i == cellselect1:
                 cells[n]=("o")
-                print(cells)
+                grid = [cells[i:i + 3] for i in range(0, len(cells), 3)]
+                for x,y,z in grid:
+                    print(x,y,z)
+        #User selects amount of credits to bet with.
+        money_input = 0
+        while not money_input in range (1, 101): #does not accept float values - will limit accuracy of balances.
+            print("Enter the amount you wish to bet with:")
+            try:
+                money_input = int(input( ))
+            except ValueError:
+                money_input not in range (1, 101)
+        print("You are betting",money_input,"credits on cell:",cellselect1)
+        def update():
+            global start_balance
+            start_balance = (start_balance - money_input)
+            return start_balance
+        update()
+        currentbalance = (start_balance)
+        print("Current balance =",(currentbalance))
+
+        #Game selects a cell. Multiplier takes effect. Money rewarded/discarded.
+        print("The multiplier value is:",multiplier)
+        gamerandomiser = randint(1,9)
+        print ("The game selected cell:")
+        gamecellselect = gridoptions[gamerandomiser]
+        for n, i in enumerate(cells):
+            if i == gamecellselect:
+                cells[n]=("$")
+                grid = [cells[i:i + 3] for i in range(0, len(cells), 3)]
+                for x,y,z in grid:
+                    print(x,y,z)
+                
+        print("Cell:",gamecellselect,"!")
+        if gamecellselect == cellselect1:
+            print("Congratulations, you guessed correctly.")
+            print("You betted:",money_input)
+            reward = (money_input * multiplier)
+            print("You are rewarded with:",reward,"!")
+            def update2():
+                global start_balance
+                start_balance = (start_balance + reward)
+                return start_balance
+            update()
+            print("Updated balance:", (start_balance))
+        else:
+            currentbalance = (start_balance)
+            print("Unlucky! Your current balance is now:", (currentbalance))
+   
                 
     if cellselect == 2:
+        multiplier = 3
         while not cellselect2 in (cells):
             print("Select the cell you want to bet on.")
             try:
@@ -118,8 +169,63 @@ def UserSelect():
             except ValueError:
                 cellselect2 not in (cells)
             print("You selected cell:", cellselect2)
+            time.sleep(1)
+        print("Updated grid:")
+        for n, i in enumerate(cells):
+            if i == cellselect2:
+                cells[n]=("o")
+                grid = [cells[i:i + 4] for i in range(0, len(cells), 4)]
+                for w,x,y,z in grid:
+                    print(w,x,y,z)
+        #User selects amount of credits to bet with.
+        money_input = 0
+        while not money_input in range (1, 101): #does not accept float values - will limit accuracy of balances.
+            print("Enter the amount you wish to bet with:")
+            try:
+                money_input = int(input( ))
+            except ValueError:
+                money_input not in range (1, 101)
+        print("You are betting",money_input,"credits on cell:",cellselect2)
+        def update():
+            global start_balance
+            start_balance = (start_balance - money_input)
+            return start_balance
+        update()
+        currentbalance = (start_balance)
+        print("Current balance =",(currentbalance))
+
+
+        #Game selects a cell. Multiplier takes effect. Money rewarded/discarded.
+        print("The multiplier value is:",multiplier)
+        gamerandomiser = randint(1,16)
+        print ("The game selected cell:")
+        gamecellselect = gridoptions[gamerandomiser]
+        for n, i in enumerate(cells):
+            if i == gamecellselect:
+                cells[n]=("$")
+                grid = [cells[i:i + 4] for i in range(0, len(cells), 4)]
+                for w,x,y,z in grid:
+                    print(w,x,y,z)
+                
+        print("Cell:",gamecellselect,"!")
+        if gamecellselect == cellselect1:
+            print("Congratulations, you guessed correctly.")
+            print("You betted:",money_input)
+            reward = (money_input * multiplier)
+            print("You are rewarded with:",reward,"!")
+            def update2():
+                global start_balance
+                start_balance = (start_balance + reward)
+                return start_balance
+            update()
+            print("Updated balance:", (start_balance))
+        else:
+            currentbalance = (start_balance)
+            print("Unlucky! Your current balance is now:", (currentbalance))
+
 
     if cellselect == 3:
+        multiplier = 4
         while not cellselect3 in (cells):
             print("Select the cell you want to bet on.")
             try:
@@ -127,5 +233,77 @@ def UserSelect():
             except ValueError:
                 cellselect3 not in (cells)
             print("You selected cell:", cellselect3)
-UserSelect()
-    
+            time.sleep(1)
+        print("Updated grid:")
+        for n, i in enumerate(cells):
+            if i == cellselect3:
+                cells[n]=("o")
+                grid = [cells[i:i + 5] for i in range(0, len(cells), 5)]
+                for v,w,x,y,z in grid:
+                    print(v,w,x,y,z)
+        #User selects amount of credits to bet with.
+        money_input = 0
+        while not money_input in range (1, 101): #does not accept float values - will limit accuracy of balances.
+            print("Enter the amount you wish to bet with:")
+            try:
+                money_input = int(input( ))
+            except ValueError:
+                money_input not in range (1, 101)
+        print("You are betting",money_input,"credits on cell:",cellselect3)
+        def update():
+            global start_balance
+            start_balance = (start_balance - money_input)
+            return start_balance
+        update()
+        currentbalance = (start_balance)
+        print("Current balance =",(currentbalance))
+
+
+        #Game selects a cell. Multiplier takes effect. Money rewarded/discarded.
+        print("The multiplier value is:",multiplier)
+        gamerandomiser = randint(1,25)
+        print ("The game selected cell:")
+        gamecellselect = gridoptions[gamerandomiser]
+        for n, i in enumerate(cells):
+            if i == gamecellselect:
+                cells[n]=("$")
+                grid = [cells[i:i + 5] for i in range(0, len(cells), 5)]
+                for v,w,x,y,z in grid:
+                    print(v,w,x,y,z)
+                
+        print("Cell:",gamecellselect,"!")
+        if gamecellselect == cellselect1:
+            print("Congratulations, you guessed correctly.")
+            print("You betted:",money_input)
+            reward = (money_input * multiplier)
+            print("You are rewarded with:",reward,"!")
+            def update2():
+                global start_balance
+                start_balance = (start_balance + reward)
+                return start_balance
+            update()
+            print("Updated balance:", (start_balance))
+        else:
+            currentbalance = (start_balance)
+            print("Unlucky! Your current balance is now:", (currentbalance))
+
+    if start_balance <= 0:
+        print("You have run out of credits. Game Over.")
+        sys.exit()
+        
+BetGame()
+
+Loop = True
+while Loop == True:
+    restartinput = 0
+    while not restartinput in ('yes','no'):
+        print("Do you want to bet again? ['yes'/'no']")
+        try:
+            restartinput = str(input( ))
+        except ValueError:
+            restartinput not in ('yes','no')
+        if restartinput == ('yes'):
+            BetGame()
+        else:
+            print("Game finishes, your final balance is:", (currentbalance))
+            sys.exit()
